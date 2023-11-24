@@ -246,16 +246,8 @@ class PatchTST_backbone(nn.Module):
         pretrain_head: bool = False,
         head_type="flatten",
         individual=False,
-        revin=True,
-        affine=True,
-        subtract_last=False,
     ):
         super().__init__()
-
-        # RevIn
-        self.revin = revin
-        if self.revin:
-            self.revin_layer = RevIN(c_in, affine=affine, subtract_last=subtract_last)
 
         # Patching
         self.patch_len = patch_len
@@ -312,15 +304,9 @@ class PatchTST_backbone(nn.Module):
                 c_out,
                 head_dropout=head_dropout,
             )
-        self.flag = True
+        self.flag = False
 
     def forward(self, z):  # z: [bs x nvars x seq_len]
-        # norm
-        if self.revin:
-            z = z.permute(0, 2, 1)
-            z = self.revin_layer(z, "norm")
-            z = z.permute(0, 2, 1)
-
         if self.flag:
             fig = plt.figure(figsize=(4, 3),dpi=300)
             plt.plot(z.cpu().numpy()[0][0],color = '#008B45', linewidth=2.0)
@@ -337,31 +323,15 @@ class PatchTST_backbone(nn.Module):
         # model 
         z = self.backbone(z)  # (batchsize, nvars, hidden_size, patch_num（seq_len）) 
 
-          # 绘制热力图
         if self.flag:
           fig = plt.figure(figsize=(4, 3),dpi=300)
           ax = sns.heatmap(z.cpu().numpy()[0][0], cmap="YlGnBu")
           fig.text(0.5, -0.1, 'attentionmap', ha='center', va='bottom', fontsize=18)
-          # plt.title("PatchTST")
-
-          #  # 隐藏坐标轴
-          # ax.set_xticks([])
-          # ax.set_yticks([])
-          
-          # # 隐藏颜色栏
-          # cax = plt.gcf().axes[-1]
-          # cax.remove()
           plt.show()
           self.flag = False
 
-
         z = self.head(z)  # z: [bs x nvars x h]
 
-        # denorm
-        if self.revin:
-            z = z.permute(0, 2, 1)
-            z = self.revin_layer(z, "denorm")
-            z = z.permute(0, 2, 1)
         return z
 
     def create_pretrain_head(self, head_nf, vars, dropout):
@@ -1013,6 +983,11 @@ class PatchTST(BaseWindows):
         attn_mask = None  # Not used
 
 
+        # RevIn
+        self.revin = revin
+        if self.revin:
+            self.revin_layer = RevIN(c_in, affine=revin_affine, subtract_last=revin_subtract_last)
+
         self.transformer_input_size = 192
 
         self.model = PatchTST_backbone(
@@ -1046,10 +1021,7 @@ class PatchTST(BaseWindows):
             padding_patch=padding_patch,
             pretrain_head=pretrain_head,
             head_type=head_type,
-            individual=individual,
-            revin=revin,
-            affine=revin_affine,
-            subtract_last=revin_subtract_last,
+            individual=individual
         )
 
         self.dsp_mean = DSP(
@@ -1069,9 +1041,7 @@ class PatchTST(BaseWindows):
         self.mnk = MNK(
             kernel_size=25,
             stride=1
-        )
-
-        
+        ) 
 
     def forward(self, windows_batch):  # x: [batch, input_size]
         # Parse windows_batch
@@ -1083,6 +1053,12 @@ class PatchTST(BaseWindows):
 
         x = insample_y.unsqueeze(-1)  # [Ws,L,1]
         x = x.permute(0, 2, 1)  # x: [Batch, 1, input_size]
+
+        # norm
+        if self.revin:
+            x = x.permute(0, 2, 1)
+            x = self.revin_layer(x, "norm")
+            x = x.permute(0, 2, 1)
 
         ### stationarize:
         x_norm, x_mean, x_std = self.mnk.stationarize(x.permute(0, 2, 1))
@@ -1097,6 +1073,12 @@ class PatchTST(BaseWindows):
 
         ### destationarize:
         x = self.mnk.destationarize(x, mean_hat, std_hat)
+
+        # denorms
+        if self.revin:
+            x = x.permute(0, 2, 1)
+            x = self.revin_layer(x, "denorm")
+            x = x.permute(0, 2, 1)
 
         # Domain map
         x = x.reshape(x.shape[0], self.h, -1)  # x: [Batch, h, c_out]

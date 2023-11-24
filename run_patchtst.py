@@ -4,7 +4,6 @@ os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
 
 import argparse
 import pandas as pd
-
 import ray
 ray.init()
 from ray import tune
@@ -12,7 +11,6 @@ from ray import tune
 
 from neuralforecast.auto import AutoPatchTST
 from neuralforecast.core import NeuralForecast
-
 from neuralforecast.losses.pytorch import MAE, HuberLoss, MQLoss
 from neuralforecast.losses.numpy import mae, mse
 
