@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['AutoRNN', 'AutoLSTM', 'AutoGRU', 'AutoTCN', 'AutoDilatedRNN', 'AutoMLP', 'AutoNBEATS', 'AutoNBEATSx', 'AutoNHITS',
            'AutoTFT', 'AutoVanillaTransformer', 'AutoInformer', 'AutoAutoformer', 'AutoFEDformer', 'AutoPatchTST',
-           'AutoStemGNN', 'AutoHINT','AutoHEncoder','AutoMIXModel']
+           'AutoStemGNN', 'AutoHINT','AutoPatchTST_with_DSP']
 
 # %% ../nbs/models.ipynb 2
 from os import cpu_count
@@ -31,8 +31,7 @@ from .models.informer import Informer
 from .models.autoformer import Autoformer
 from .models.fedformer import FEDformer
 from .models.patchtst import PatchTST
-from .models.hencoder import HEncoder
-from .models.mixmodel_rescale_deco import MIXModel
+from .models.patchtst_with_dsp import PatchTST as PatchTST_with_DSP
 
 from .models.stemgnn import StemGNN
 from .models.hint import HINT
@@ -922,83 +921,10 @@ class AutoPatchTST(BaseAuto):
             alias=alias,
         )
 
-class AutoHEncoder(BaseAuto):
+class AutoPatchTST_with_DSP(BaseAuto):
     default_config = {
-        "h": None,
-        "hidden_size": tune.choice([16, 128, 256]),
-        "n_heads": tune.choice([4, 16]),
-        "patch_len": tune.choice([16, 24]),
-        "learning_rate": tune.loguniform(1e-4, 1e-1),
-        "scaler_type": tune.choice([None, "robust", "standard"]),
-        "revin": tune.choice([False, True]),
-        "max_steps": tune.choice([100,500]),
-        "batch_size": tune.choice([32, 64, 128, 256]),
-        "windows_batch_size": tune.choice([128, 256, 512, 1024]),
-        "loss": None,
-        "random_seed": tune.randint(1, 20),
-        "input_size_multiplier": [1, 3, 5],
-        "h": None,
-        "n_pool_kernel_size": tune.choice(
-            [[2, 2, 1], 3 * [1], 3 * [2], 3 * [4], [8, 4, 1], [16, 8, 1]]
-        ),
-        "n_freq_downsample": tune.choice(
-            [
-                [168, 24, 1],
-                [24, 12, 1],
-                [180, 60, 1],
-                [60, 8, 1],
-                [40, 20, 1],
-                [1, 1, 1],
-            ]
-        ),
-    }
-    
-
-    def __init__(
-        self,
-        h,
-        loss=MAE(),
-        valid_loss=None,
-        config=None,
-        search_alg=BasicVariantGenerator(random_state=1),
-        num_samples=20,
-        refit_with_val=False,
-        cpus=cpu_count(),
-        gpus=torch.cuda.device_count(),
-        verbose=False,
-        alias=None,
-    ):
-        # Define search space, input/output sizes
-        if config is None:
-            config = self.default_config.copy()
-            config["input_size"] = tune.choice(
-                [h * x for x in self.default_config["input_size_multiplier"]]
-            )
-
-            # Rolling windows with step_size=1 or step_size=h
-            # See `BaseWindows` and `BaseRNN`'s create_windows
-            config["step_size"] = tune.choice([1, h])
-            del config["input_size_multiplier"]
-
-        super(AutoHEncoder, self).__init__(
-            cls_model=HEncoder,
-            h=h,
-            loss=loss,
-            valid_loss=valid_loss,
-            config=config,
-            search_alg=search_alg,
-            num_samples=num_samples,
-            refit_with_val=refit_with_val,
-            cpus=cpus,
-            gpus=gpus,
-            verbose=verbose,
-            alias=alias,
-        )
-
-class AutoMIXModel(BaseAuto):
-    default_config = {
-      "random_seed": tune.randint(1, 20),
-      "learning_rate": tune.loguniform(1e-5, 5e-3),                   
+      "random_seed": tune.randint(2023),
+      "learning_rate": tune.choice([0.001]),                   
       "max_steps": tune.choice([300]),                                  
       "loss": None,                                        
       "n_pool_kernel_size": tune.choice([[16, 8, 1]]),               
@@ -1006,7 +932,7 @@ class AutoMIXModel(BaseAuto):
       "dropout_prob_theta": tune.choice([0.2]),                                
       "activation": tune.choice(['ReLU']),                                     
       "n_blocks":  tune.choice([[1, 1, 1]]),                                  
-      "mlp_units":  tune.choice([[[256, 256]] * 3]),        
+      "mlp_units":  tune.choice([[[512, 512]] * 3]),        
       "interpolation_mode": tune.choice(['linear']),                            
       "val_check_steps": tune.choice([100]),                                   
       "encoder_layers": tune.choice([3]),
@@ -1020,7 +946,7 @@ class AutoMIXModel(BaseAuto):
       "batch_size": tune.choice([32]),                                          
       "windows_batch_size": tune.choice([1024]),                                
       "scaler_type": tune.choice([None, "robust", "standard"]),  
-      "step_size": tune.choice([2]),
+      "step_size": tune.choice([1, 2]),
       "transformer_input_size": tune.choice([192]),
       "batch_normalization": tune.choice([True, False]),
       "drop_last_loader": tune.choice([True]),
@@ -1047,14 +973,13 @@ class AutoMIXModel(BaseAuto):
             config["input_size"] = tune.choice(
                 [h * x for x in self.default_config["input_size_multiplier"]]
             )
-
             # Rolling windows with step_size=1 or step_size=h
             # See `BaseWindows` and `BaseRNN`'s create_windows
             config["step_size"] = tune.choice([1, h])
             del config["input_size_multiplier"]
 
-        super(AutoMIXModel, self).__init__(
-            cls_model=MIXModel,
+        super(AutoPatchTST_with_DSP, self).__init__(
+            cls_model=PatchTST_with_DSP,
             h=h,
             loss=loss,
             valid_loss=valid_loss,

@@ -93,7 +93,6 @@ if __name__ == '__main__':
                                    test_size=test_size, n_windows=None)
 
     y_true = Y_hat_df.y.values
-    # y_hat = Y_hat_df['AutoMixmodel'].values
     y_hat = Y_hat_df['AutoNHITS'].values
     
 

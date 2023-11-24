@@ -32,9 +32,8 @@ from neuralforecast.models import (
     FEDformer,
     StemGNN,
     PatchTST,
+    
 )
-
-from neuralforecast.models.mixmodel_rescale_deco import MIXModel
 
 # %% ../nbs/core.ipynb 5
 def _cv_dates(last_dates, freq, h, test_size, step_size=1):

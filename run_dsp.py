@@ -7,7 +7,7 @@ import time
 from ray import tune
 import ray
 ray.init()
-from neuralforecast.auto import AutoMIXModel
+from neuralforecast.auto import AutoPatchTST_with_DSP
 from neuralforecast.core import NeuralForecast
 from neuralforecast.losses.pytorch import MAE, HuberLoss, MQLoss
 from neuralforecast.losses.numpy import mae, mse
@@ -19,7 +19,7 @@ import logging
 logging.getLogger("pytorch_lightning").setLevel(logging.WARNING)
 
 # command line:
-# python run_mixmodel.py --dataset 'ETTh1' --horizon 96 --num_samples 30
+# python run_dsp.py --dataset 'ETTh1' --horizon 96 --num_samples 20
 
 if __name__ == "__main__":
     # Parse execution parameters
@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
     #### 3. 确定模型
     models = [
-        AutoMIXModel(
+        AutoPatchTST_with_DSP(
             h=horizon,
             loss=MAE(),
             config=mix_config,
@@ -98,13 +98,13 @@ if __name__ == "__main__":
     )
 
     y_true = Y_hat_df.y.values
-    y_hat = Y_hat_df["AutoMIXModel"].values
+    y_hat = Y_hat_df["AutoPatchTST_with_DSP"].values
     n_series = len(Y_df.unique_id.unique())
     y_true = y_true.reshape(n_series, -1, horizon)
     y_hat = y_hat.reshape(n_series, -1, horizon)
     print("\n" * 4)
     print("Parsed results")
-    print(f"AutoMIXModel {dataset} h={horizon}")
+    print(f"AutoPatchTST_with_DSP {dataset} h={horizon}")
     print("test_size", test_size)
     print("y_true.shape (n_series, n_windows, n_time_out):\t", y_true.shape)
     print("y_hat.shape  (n_series, n_windows, n_time_out):\t", y_hat.shape)

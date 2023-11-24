@@ -1,7 +1,7 @@
 __all__ = ['RNN', 'GRU', 'LSTM', 'TCN', 'DilatedRNN',
            'MLP', 'NHITS', 'NBEATS', 'NBEATSx',
            'TFT', 'VanillaTransformer', 'Informer', 'Autoformer', 'PatchTST', 'FEDformer',
-           'StemGNN', 'HINT', 'DSP']
+           'StemGNN', 'HINT', 'PatchTST_with_DSP']
 
 from .rnn import RNN
 from .gru import GRU
@@ -20,4 +20,4 @@ from .autoformer import Autoformer
 from .fedformer import FEDformer
 from .patchtst import PatchTST
 from .hint import HINT
-from .dsp import DistributionShiftPredictor as DSP
+from .patchtst_with_dsp import PatchTST_with_DSP

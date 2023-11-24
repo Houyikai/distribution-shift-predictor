@@ -23,7 +23,7 @@ import logging
 
 logging.getLogger("pytorch_lightning").setLevel(logging.WARNING)
 
-# python run_hencoder.py --dataset 'ETTh1' --horizon 96 --num_samples 20
+# python run_patchtst.py --dataset 'ETTh1' --horizon 96 --num_samples 20
 
 ### 自动调参，开销大
 if __name__ == "__main__":
