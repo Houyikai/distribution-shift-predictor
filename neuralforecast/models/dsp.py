@@ -177,7 +177,7 @@ class DistributionShiftPredictor(nn.Module):
         pred_len: int,
         input_len: int,
         layers: int = 3,
-        hidden_size: int = 512,
+        hidden_size: int = 256,
         dropout: float = 0.2,
         futr_exog_list=None,
         hist_exog_list=None,
