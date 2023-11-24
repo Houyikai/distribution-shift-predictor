@@ -32,8 +32,6 @@ from neuralforecast.models import (
     FEDformer,
     StemGNN,
     PatchTST,
-    HEncoder,
-    # MIXModel
 )
 
 from neuralforecast.models.mixmodel_rescale_deco import MIXModel
@@ -149,9 +147,6 @@ MODEL_FILENAME_DICT = {
     "autopatchtst": PatchTST,
     "autofedformer": FEDformer,
     "autostemgnn": StemGNN,
-    "hencoder": HEncoder,
-    "automixmodel":MIXModel,
-    'mixmodel':MIXModel,
 }
 
 # %% ../nbs/core.ipynb 12

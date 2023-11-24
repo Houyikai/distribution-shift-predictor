@@ -570,8 +570,8 @@ class model_backbone(nn.Module):
         # len(stack_types)=len(n_freq_downsample)=len(n_pool_kernel_size)=len(n_blocks)
         # 每一个stack 有一个freq_downsample 和 pool_kernel_size 和 block_num
         stack_types: list = ["identity"] * 3,
-        n_pool_kernel_size: list = [2, 2, 1],
-        n_freq_downsample: list = [4, 2, 1],
+        n_pool_kernel_size: list = [16, 8, 1],
+        n_freq_downsample: list = [16, 8, 1],
         n_blocks: list = [1] * 3, # Number of blocks for each stack.
         mlp_units: list = [[512, 512]] * 3,  # 每一个block的层数和每一层的神经元个数
         pooling_mode: str = "MaxPool1d",
