@@ -27,4 +27,7 @@ python run_dsp.py --dataset 'ETTh1' --horizon 96 --num_samples 10
 ```
 
 You can access the final forecasts from the `./data/{dataset}/{horizon}_forecasts.csv` file. Example: `./data/ETTh1/96_forecasts.csv`.
+
+Or run the example in notebook test_dsp.
+
 <br><br>
