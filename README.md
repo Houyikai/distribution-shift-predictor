@@ -11,11 +11,16 @@ https://github.com/nixtla/neuralforecast
 
 ## Key Points
 
+This paper proposes a universal Transformer architecture based on stationarization and de-stationarization to address the problem of distribution shift and information utilization bottleneck. It comprises two plug-and-play end-to-end training modules. Moving Normalization Kernel (MNK) is used to stationarize the input sequence of the Transformer, which enhances its predictability and reduces the number of parameters. Distribution Shift Predictor (DSP) explicitly models the dynamics of sequence distribution changes, enabling the approximation to the actual distributions for Transformer predictions.
 ![alt text](https://github.com/Houyikai/distribution-shift-predictor/blob/main/pics/overall%20structure.png)
 
 ## Main Results
 
+forecasting accuracy:
 ![alt text](https://github.com/Houyikai/distribution-shift-predictor/blob/main/pics/results.png)
+
+computation and memory efficiency:
+![alt text](https://github.com/Houyikai/distribution-shift-predictor/blob/main/pics/efficiency.png)
 
 ## Reproducibility
 
