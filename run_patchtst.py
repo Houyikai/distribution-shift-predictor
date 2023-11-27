@@ -23,7 +23,6 @@ logging.getLogger("pytorch_lightning").setLevel(logging.WARNING)
 
 # python run_patchtst.py --dataset 'ETTh1' --horizon 96 --num_samples 20
 
-### 自动调参，开销大
 if __name__ == "__main__":
     # Parse execution parameters
     verbose = True
@@ -50,7 +49,6 @@ if __name__ == "__main__":
     # Adapt input_size to available data
     input_size = tune.choice([24,48,96])
 
-    #### 1. 定义搜索空间
     tst_config = {
         "h": None,
         "n_heads": tune.choice([2, 4]),
@@ -71,16 +69,15 @@ if __name__ == "__main__":
         "scaler_type": tune.choice([None, "robust", "standard"]),    
     }
 
-    #### 2. 选择搜索算法
-    from ray.tune.search.optuna import OptunaSearch
 
-    #### 3. 确定模型
+    # from ray.tune.search.optuna import OptunaSearch
+
     models = [
         AutoPatchTST(
             h=horizon,
             loss=MAE(),
             config=tst_config,
-            search_alg=OptunaSearch(),
+            # search_alg=OptunaSearch(),
             num_samples=num_samples,
             refit_with_val=True,
         )
