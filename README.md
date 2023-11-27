@@ -1,6 +1,8 @@
 # Long Horizon Forecasting Experiments with Distribution Shift Prediction
 
 <br>
+## Key Points
+![image](pics/overview.png)
 
 ## Reproducibility
 
