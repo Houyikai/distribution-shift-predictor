@@ -1,8 +1,21 @@
 # Long Horizon Forecasting Experiments with Distribution Shift Prediction
 
 <br>
+
+## Introduction
+
+This repository contains the code for the paper "To See the Big Picture: Time Series Forecasting with Distribution Shift Prediction".
+
+The code is based on the [NeuralForecast]
+https://github.com/nixtla/neuralforecast
+
 ## Key Points
-![image](pics/overview.png)
+
+![alt text](https://github.com/Houyikai/distribution-shift-predictor/blob/main/pics/overall%20structure.png)
+
+## Main Results
+
+![alt text](https://github.com/Houyikai/distribution-shift-predictor/blob/main/pics/results.png)
 
 ## Reproducibility
 
