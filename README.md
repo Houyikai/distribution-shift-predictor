@@ -34,7 +34,13 @@ conda env create -f environment.yml
 3. Activate the conda environment using
 
 ```shell
-conda activate neuralforecast
+conda activate dsp
+```
+
+then install the `datasetsforecast` package using pip:
+
+```shell
+pip install git+https://github.com/Nixtla/datasetsforecast.git
 ```
 
 4. Run the experiments for each dataset and each model using with

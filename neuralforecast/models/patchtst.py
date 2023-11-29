@@ -21,15 +21,6 @@ from ..losses.pytorch import MAE
 from neuralforecast.models.fedformer import FourierBlock
 
 
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns 
-import matplotlib as mpl
-
-mpl.rcParams['font.family'] = 'serif'
-mpl.rcParams['font.serif'] = ['Times New Roman']
-
-
 # %% ../../nbs/models.patchtst.ipynb 9
 class Transpose(nn.Module):
     def __init__(self, *dims, contiguous=False):
@@ -309,7 +300,6 @@ class PatchTST_backbone(nn.Module):
                 c_out,
                 head_dropout=head_dropout,
             )
-        self.flag = True
 
     def forward(self, z):  # z: [bs x nvars x seq_len]
         # norm
@@ -317,12 +307,6 @@ class PatchTST_backbone(nn.Module):
             z = z.permute(0, 2, 1)
             z = self.revin_layer(z, "norm")
             z = z.permute(0, 2, 1)
-
-        if self.flag:
-            fig = plt.figure(figsize=(4, 3),dpi=300)
-            plt.plot(z.cpu().numpy()[0][0],color = '#008B45', linewidth=2.0)
-            fig.text(0.5, -0.1, 'input', ha='center', va='bottom', fontsize=18)
-            plt.show()
 
         # do patching
         if self.padding_patch == "end":
@@ -333,24 +317,6 @@ class PatchTST_backbone(nn.Module):
         z = z.permute(0, 1, 3, 2)  # z: [bs x nvars x patch_len x patch_num]
         # model 
         z = self.backbone(z)  # (batchsize, nvars, hidden_size, patch_num（seq_len）) 
-
-          # 绘制热力图
-        if self.flag:
-          fig = plt.figure(figsize=(4, 3),dpi=300)
-          ax = sns.heatmap(z.cpu().numpy()[0][0], cmap="YlGnBu")
-          fig.text(0.5, -0.1, 'attentionmap', ha='center', va='bottom', fontsize=18)
-          # plt.title("PatchTST")
-
-          #  # 隐藏坐标轴
-          # ax.set_xticks([])
-          # ax.set_yticks([])
-          
-          # # 隐藏颜色栏
-          # cax = plt.gcf().axes[-1]
-          # cax.remove()
-          plt.show()
-          self.flag = False
-
 
         z = self.head(z)  # z: [bs x nvars x h]
 
