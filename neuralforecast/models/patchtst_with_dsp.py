@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['SinCosPosEncoding', 'Transpose', 'get_activation_fn', 'PositionalEncoding', 'Coord2dPosEncoding',
            'Coord1dPosEncoding', 'positional_encoding', 'RevIN', 'PatchTST_backbone', 'Flatten_Head', 'TSTiEncoder',
-           'TSTEncoder', 'TSTEncoderLayer', 'PatchTST']
+           'TSTEncoder', 'TSTEncoderLayer', 'PatchTST_DSP']
 
 # %% ../../nbs/models.patchtst.ipynb 5
 import math
@@ -803,7 +803,7 @@ class _ScaledDotProductAttention(nn.Module):
             return output, attn_weights
 
 # %% ../../nbs/models.patchtst.ipynb 17
-class PatchTST(BaseWindows):
+class PatchTST_DSP(BaseWindows):
     """PatchTST
 
     The PatchTST model is an efficient Transformer-based model for multivariate time series forecasting.
@@ -908,7 +908,7 @@ class PatchTST(BaseWindows):
         
         trainer_kwargs['precision'] = "16-mixed"
         
-        super(PatchTST, self).__init__(
+        super(PatchTST_DSP, self).__init__(
             h=h,
             input_size=input_size,
             hist_exog_list=hist_exog_list,
@@ -1003,6 +1003,7 @@ class PatchTST(BaseWindows):
             individual=individual
         )
 
+        ## new module
         self.dsp_mean = DSP(
             c_in=c_in,
             c_out=c_out,

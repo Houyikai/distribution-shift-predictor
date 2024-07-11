@@ -21,10 +21,12 @@ nbs/.last_checked
 _proc
 lightning_logs/
 data/W
-
 checkpoints/
 examples/
 exp_results/
 dataset/
 data/
 .conda/
+test.ipynb
+models/*
+nbs/*

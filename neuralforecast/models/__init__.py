@@ -20,4 +20,4 @@ from .autoformer import Autoformer
 from .fedformer import FEDformer
 from .patchtst import PatchTST
 from .hint import HINT
-from .patchtst_with_dsp import PatchTST as PatchTST_with_DSP
+from .patchtst_with_dsp import PatchTST_DSP

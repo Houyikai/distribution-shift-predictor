@@ -1,16 +1,9 @@
-name: dsp
+name: long_horizon
 channels:
   - conda-forge
-  - pytorch
 dependencies:
-  - jupyterlab
-  - matplotlib
-  - numpy>=1.21.6
-  - pandas>=1.3.5
-  - pytorch>=2.0.0
-  - pytorch-lightning>=2.0.0
+  - numpy<1.24
   - pip
   - pip:
-      - nbdev
-      - black
-      - "ray[tune]>=2.2.0"
+    - "git+https://github.com/Nixtla/datasetsforecast.git"
+    - "git+https://github.com/Nixtla/neuralforecast.git"

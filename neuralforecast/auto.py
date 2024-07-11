@@ -31,7 +31,7 @@ from .models.informer import Informer
 from .models.autoformer import Autoformer
 from .models.fedformer import FEDformer
 from .models.patchtst import PatchTST
-from .models.patchtst_with_dsp import PatchTST as PatchTST_with_DSP
+from .models.patchtst_with_dsp import PatchTST_DSP as PatchTST_with_DSP
 
 from .models.stemgnn import StemGNN
 from .models.hint import HINT

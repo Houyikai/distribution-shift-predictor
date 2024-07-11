@@ -4,7 +4,7 @@
 
 ## Introduction
 
-This repository contains the code for the paper "To See the Big Picture: Time Series Forecasting with Distribution Shift Prediction".
+This repository contains the code for the paper "Time Series Forecasting with Distribution Shift Prediction".
 
 The code is based on the [NeuralForecast]
 https://github.com/nixtla/neuralforecast
@@ -34,7 +34,7 @@ conda env create -f environment.yml
 3. Activate the conda environment using
 
 ```shell
-conda activate dsp
+conda activate long_horizon
 ```
 
 then install the `datasetsforecast` package using pip:
